@@ -4,9 +4,35 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Diary"
+        xmlns:vm="clr-namespace:Diary.ViewModel"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Diary" Height="450" Width="800">
+    <Window.DataContext>
+        <vm:TasksViewModel/>
+    </Window.DataContext>
     <Grid>
-        
+        <TextBlock Margin="10 10 0 0" HorizontalAlignment="Left" VerticalAlignment="Top" Text="Number of tasks: ">
+            <Run Text="{Binding Path=TasksList.Count, Mode=OneWay}"/>
+        </TextBlock>
+
+        <ListBox x:Name="lb_taskList" Margin="10,35,10,200" ItemsSource="{Binding Path=TasksList}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Vertical" Margin="3">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Description, Mode=OneWay}" FontSize="20"/>
+                            <Button Content="Accomplished" Command="{Binding MarkAsAccomplished}"/>
+                            <Button Content="Not Accomplished" Command="{Binding MarkAsNotAccomplished}"/>
+                        </StackPanel>
+                        <TextBlock>
+                            Realization: 
+                            <Run Text="{Binding Path=RealizationDate, Mode=OneWay, StringFormat={}{0:dd MMMM yyyy}, ConverterCulture=pl-PL}"/>, 
+                            Created:
+                            <Run Text="{Binding Path=CreationDate, Mode=OneWay, StringFormat={}{0:dd MMMM yyyy}, ConverterCulture=pl-PL}"/>
+                        </TextBlock>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
     </Grid>
 </Window>
