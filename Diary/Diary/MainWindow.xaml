@@ -10,6 +10,16 @@
     <Window.DataContext>
         <vm:TasksViewModel/>
     </Window.DataContext>
+    <Window.Resources>
+        <Style x:Key="buttonStyle" TargetType="Button">
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="Margin" Value="5" />
+            <Setter Property="Width" Value="85" />
+            <Setter Property="Height" Value="20" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+        </Style>
+    </Window.Resources>
     <Grid>
         <TextBlock Margin="10 10 0 0" HorizontalAlignment="Left" VerticalAlignment="Top" Text="Number of tasks: ">
             <Run Text="{Binding Path=TasksList.Count, Mode=OneWay}"/>
@@ -21,8 +31,8 @@
                     <StackPanel Orientation="Vertical" Margin="3">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="{Binding Description, Mode=OneWay}" FontSize="20"/>
-                            <Button Content="Accomplished" Command="{Binding MarkAsAccomplished}"/>
-                            <Button Content="Not Accomplished" Command="{Binding MarkAsNotAccomplished}"/>
+                            <Button Content="Accomplished" Command="{Binding MarkAsAccomplished}" Style="{StaticResource buttonStyle}"/>
+                            <Button Content="Not Accomplished" Command="{Binding MarkAsNotAccomplished}" Style="{StaticResource buttonStyle}"/>
                         </StackPanel>
                         <TextBlock>
                             Realization: 
@@ -33,6 +43,18 @@
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="Control.Margin" Value="3"/>
+                    <Setter Property="Control.BorderBrush" Value="Black"/>
+                    <Setter Property="Control.BorderThickness" Value="1"/>
+                    <Style.Triggers>
+                        <Trigger Property="Control.IsMouseOver" Value="True">
+                            <Setter Property="Control.Background" Value="LightGray"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </ListBox.ItemContainerStyle>
         </ListBox>
     </Grid>
 </Window>
