@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Diary"
+        xmlns:u="clr-namespace:Diary.Utilities"
         xmlns:vm="clr-namespace:Diary.ViewModel"
         mc:Ignorable="d"
         Title="Diary" Height="450" Width="800">
@@ -11,6 +12,13 @@
         <vm:TasksViewModel/>
     </Window.DataContext>
     <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="boolToVisibility" />
+        <u:PriorityToString x:Key="priorityToString"/>
+        <u:PriorityToBrush x:Key="priorityToBrush"/>
+        <u:BoolToBrushConverter x:Key="isAccomplishedToBrush"/>
+        <u:BoolToBrushConverter x:Key="isDeadlineExpired" TrueColor="Red" FalseColor="Green" />
+        <u:BoolToTextDecorationConverter x:Key="isAccomplishedToTextDecoration"/>
+        
         <Style x:Key="buttonStyle" TargetType="Button">
             <Setter Property="FontSize" Value="10" />
             <Setter Property="Margin" Value="5" />
@@ -30,13 +38,19 @@
                 <DataTemplate>
                     <StackPanel Orientation="Vertical" Margin="3">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding Description, Mode=OneWay}" FontSize="20"/>
+                            <TextBlock Text="{Binding Description, Mode=OneWay}" FontSize="20"
+                                       Foreground="{Binding IsAccomplished, Converter={StaticResource isAccomplishedToBrush}}"
+                                       TextDecorations="{Binding Path=IsAccomplished, Mode=OneWay, Converter={StaticResource isAccomplishedToTextDecoration}}"/>
                             <Button Content="Accomplished" Command="{Binding MarkAsAccomplished}" Style="{StaticResource buttonStyle}"/>
                             <Button Content="Not Accomplished" Command="{Binding MarkAsNotAccomplished}" Style="{StaticResource buttonStyle}"/>
                         </StackPanel>
                         <TextBlock>
+                            Priorytet: 
+                            <Run Text="{Binding Path=Priority, Mode=OneWay, Converter={StaticResource priorityToString}}"
+                                 Foreground="{Binding Path=Priority, Mode=OneWay, Converter={StaticResource priorityToBrush}}" />
                             Realization: 
-                            <Run Text="{Binding Path=RealizationDate, Mode=OneWay, StringFormat={}{0:dd MMMM yyyy}, ConverterCulture=pl-PL}"/>, 
+                            <Run Text="{Binding Path=RealizationDate, Mode=OneWay, StringFormat={}{0:dd MMMM yyyy}, ConverterCulture=pl-PL}"
+                                 Foreground="{Binding Path=IsntAccomplishedAfterRealizationDate, Mode=OneWay, Converter={StaticResource isDeadlineExpired}}"/>, 
                             Created:
                             <Run Text="{Binding Path=CreationDate, Mode=OneWay, StringFormat={}{0:dd MMMM yyyy}, ConverterCulture=pl-PL}"/>
                         </TextBlock>

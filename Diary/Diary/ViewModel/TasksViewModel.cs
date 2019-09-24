@@ -41,7 +41,7 @@ namespace Diary.ViewModel
             tasksModel.AddTask(new SingleTaskModel("Third", DateTime.Now, DateTime.Now.AddDays(3), TaskPriority.LessImportant));
             tasksModel.AddTask(new SingleTaskModel("Fourth", DateTime.Now, DateTime.Now.AddDays(4), TaskPriority.Critical));
             tasksModel.AddTask(new SingleTaskModel("Fifth", DateTime.Now, DateTime.Now.AddDays(5), TaskPriority.Important));
-            tasksModel.AddTask(new SingleTaskModel("Sixth", DateTime.Now, DateTime.Now.AddDays(6), TaskPriority.Important));
+            tasksModel.AddTask(new SingleTaskModel("Sixth", DateTime.Now, DateTime.Now.AddDays(-6), TaskPriority.Important));
 
             copyTasks();
         }

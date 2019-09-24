@@ -26,5 +26,20 @@ namespace Diary.Model
             Priority = priority;
             IsAccomplished = isAccompished;
         }
+
+        public static string PriorityDescription(TaskPriority priority)
+        {
+            switch(priority)
+            {
+                case TaskPriority.LessImportant:
+                    return "less important";
+                case TaskPriority.Important:
+                    return "ïmportant";
+                case TaskPriority.Critical:
+                    return "critical";
+                default:
+                    throw new Exception("Unknown task priority");
+            }
+        }
     }
 }
