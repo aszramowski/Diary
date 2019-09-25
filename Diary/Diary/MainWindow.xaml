@@ -1,9 +1,10 @@
 ﻿<Window x:Class="Diary.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"        
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Diary"
+        xmlns:s="clr-namespace:System;assembly=mscorlib"
         xmlns:u="clr-namespace:Diary.Utilities"
         xmlns:vm="clr-namespace:Diary.ViewModel"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
@@ -24,7 +25,7 @@
         <u:BoolToBrushConverter x:Key="isAccomplishedToBrush"/>
         <u:BoolToBrushConverter x:Key="isDeadlineExpired" TrueColor="Red" FalseColor="Green" />
         <u:BoolToTextDecorationConverter x:Key="isAccomplishedToTextDecoration"/>
-        
+        <u:TaskConverter x:Key="createTask"/>
         <Style x:Key="buttonStyle" TargetType="Button">
             <Setter Property="FontSize" Value="10" />
             <Setter Property="Margin" Value="5" />
@@ -76,5 +77,36 @@
                 </Style>
             </ListBox.ItemContainerStyle>
         </ListBox>
+        <Button Content="Delete task"
+                HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                Margin="10,0,0,165" Width="100" Height="25"
+                Style="{StaticResource buttonStyle}"
+                Command="{Binding Path=RemoveTasksCommand}"
+                CommandParameter="{Binding ElementName=lb_taskList, Path=SelectedIndex}" />
+        <GroupBox Header="New task" Margin="10,0,10,10" MinWidth="420" Height="140" VerticalAlignment="Bottom">
+            <Grid>
+                <Label Content="Description:" Margin="10,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <TextBox x:Name="tbDescription" Height="23" Margin="10,30,10,0" VerticalAlignment="Top"/>
+                <Label Content="Priority:" Margin="10,60,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <ComboBox x:Name="cbPriority" Margin="10,85,0,0" Width="120" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <ComboBoxItem>Less important</ComboBoxItem>
+                    <ComboBoxItem IsSelected="True">Important</ComboBoxItem>
+                    <ComboBoxItem>Critical</ComboBoxItem>
+                </ComboBox>
+                <Label Content="Realization Date:" Margin="160,60,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <DatePicker x:Name="dpRealizationDate" Margin="160,85,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" 
+                            SelectedDate="{x:Static s:DateTime.Now}"/>
+                <Button Content="Add task" Margin="0,83,9.8,0" HorizontalAlignment="Right" VerticalAlignment="Top" Width="100" 
+                        Height="25" Style="{StaticResource buttonStyle}" Command="{Binding AddTasksCommand}">
+                    <Button.CommandParameter>
+                        <MultiBinding Converter="{StaticResource createTask}">
+                            <Binding ElementName="tbDescription" Path="Text"/>
+                            <Binding ElementName="dpRealizationDate" Path="SelectedDate"/>
+                            <Binding ElementName="cbPriority" Path="SelectedIndex"/>
+                        </MultiBinding>
+                    </Button.CommandParameter>
+                </Button>
+            </Grid>
+        </GroupBox>
     </Grid>
 </Window>

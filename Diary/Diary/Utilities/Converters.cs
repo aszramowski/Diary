@@ -86,4 +86,24 @@ namespace Diary.Utilities
             throw new NotImplementedException();
         }
     }
+    public class TaskConverter : IMultiValueConverter
+    {
+        PriorityToInt pzti = new PriorityToInt();
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            string description = (string)values[0];
+            DateTime creationDate = DateTime.Now;
+            DateTime? realizationDate = (DateTime?)values[1];
+            TaskPriority priority = (TaskPriority)pzti.ConvertBack(values[2], typeof(TaskPriority), null, CultureInfo.CurrentCulture);
+
+            if (!string.IsNullOrWhiteSpace(description) && realizationDate.HasValue)
+                return new ViewModel.SingleTaskViewModel(description, creationDate, realizationDate.Value, priority, false);
+            else return null;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

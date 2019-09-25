@@ -17,6 +17,8 @@ namespace Diary.ViewModel
         // storing collections
         private TasksModel tasksModel;
         private ICommand saveTasksCommand;
+        private ICommand removeTasksCommand;
+        private ICommand addTasksCommand;
 
         public ObservableCollection<SingleTaskViewModel> TasksList { get; } = new ObservableCollection<SingleTaskViewModel>();
 
@@ -60,7 +62,7 @@ namespace Diary.ViewModel
                     break;
 
                 case NotifyCollectionChangedAction.Remove:
-                    SingleTaskViewModel removedTask = (SingleTaskViewModel)e.NewItems[0];
+                    SingleTaskViewModel removedTask = (SingleTaskViewModel)e.OldItems[0];
                     if (removedTask != null)
                         tasksModel.RemoveTask(removedTask.GetModel());
                     break;
@@ -77,6 +79,45 @@ namespace Diary.ViewModel
                             Tools.Save(filePath, tasksModel);
                         });
                 return saveTasksCommand;
+            }
+        }
+        public ICommand AddTasksCommand
+        {
+            get
+            {
+                if (addTasksCommand == null)
+                    addTasksCommand = new RelayCommand(
+                        o =>
+                        {
+                            SingleTaskViewModel taskViewModel = o as SingleTaskViewModel;
+                            if (taskViewModel != null) TasksList.Add(taskViewModel);
+                        },
+                        o =>
+                        {
+                            return (o as SingleTaskViewModel) != null;
+                        });
+                return addTasksCommand;
+            }
+        }
+        public ICommand RemoveTasksCommand
+        {
+            get
+            {
+                if (removeTasksCommand == null)
+                    removeTasksCommand = new RelayCommand(
+                        o =>
+                        {
+                            int taksIndex = (int)o;
+                            SingleTaskViewModel taskViewModel = TasksList[taksIndex];
+                            TasksList.Remove(taskViewModel);
+                        },
+                        o =>
+                        {
+                            if (o == null) return false;
+                            int taskIndex = (int)o;
+                            return taskIndex >= 0;
+                        });
+                return removeTasksCommand;
             }
         }
     }

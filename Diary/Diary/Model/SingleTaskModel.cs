@@ -32,11 +32,11 @@ namespace Diary.Model
             switch(priority)
             {
                 case TaskPriority.LessImportant:
-                    return "less important";
+                    return "Less important";
                 case TaskPriority.Important:
-                    return "ïmportant";
+                    return "Important";
                 case TaskPriority.Critical:
-                    return "critical";
+                    return "Critical";
                 default:
                     throw new Exception("Unknown task priority");
             }
