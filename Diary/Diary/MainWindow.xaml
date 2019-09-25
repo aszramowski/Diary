@@ -6,11 +6,17 @@
         xmlns:local="clr-namespace:Diary"
         xmlns:u="clr-namespace:Diary.Utilities"
         xmlns:vm="clr-namespace:Diary.ViewModel"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         mc:Ignorable="d"
         Title="Diary" Height="450" Width="800">
     <Window.DataContext>
         <vm:TasksViewModel/>
     </Window.DataContext>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closed">
+            <i:InvokeCommandAction Command="{Binding SaveTasksCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="boolToVisibility" />
         <u:PriorityToString x:Key="priorityToString"/>

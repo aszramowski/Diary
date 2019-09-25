@@ -10,6 +10,13 @@ namespace Diary.Model
     public static class Tools
     {
         private static readonly IFormatProvider formatProvider = CultureInfo.InvariantCulture;
+        private const string taskElement = "Task";
+        private const string descriptionElement = "Description";
+        private const string creationDateElement = "CreationDate";
+        private const string realizationDateElement = "RealizationDate";
+        private const string isAccomplishedElement = "IsAccomplished";
+        private const string taskPriorityElement = "TaskPriority";
+
 
         public static void Save(string filePath, TasksModel tasks)
         {
@@ -20,11 +27,12 @@ namespace Diary.Model
                     new XComment("Date of saving: " + DateTime.Now.ToString(formatProvider)),
                     new XElement("Tasks",
                         from SingleTaskModel task in tasks
-                        select new XElement("Task",
-                                new XElement("Description", task.Descripton),
-                                new XElement("CreationDate", task.CreationDate),
-                                new XElement("RealizationDate", task.RealizationDate.ToString(formatProvider)),
-                                new XElement("IsAccomplished", task.IsAccomplished))
+                        select new XElement(taskElement,
+                                new XElement(descriptionElement, task.Descripton),
+                                new XElement(creationDateElement, task.CreationDate),
+                                new XElement(realizationDateElement, task.RealizationDate.ToString(formatProvider)),
+                                new XElement(taskPriorityElement, (byte)task.Priority),
+                                new XElement(isAccomplishedElement, task.IsAccomplished))
                     )
                 );
                 xml.Save(filePath);
@@ -43,11 +51,11 @@ namespace Diary.Model
                 IEnumerable<SingleTaskModel> data =
                     from task in xml.Root.Descendants("Task")
                     select new SingleTaskModel(
-                        task.Element("Description").Value,
-                        DateTime.Parse(task.Element("CreationDate").Value, formatProvider),
-                        DateTime.Parse(task.Element("RealizationDate").Value, formatProvider),
-                        (TaskPriority)byte.Parse(task.Element("Priority").Value, formatProvider),
-                        bool.Parse(task.Element("IsAccomplished").Value));
+                            task.Element(descriptionElement).Value,
+                            DateTime.Parse(task.Element(creationDateElement).Value, formatProvider),
+                            DateTime.Parse(task.Element(realizationDateElement).Value, formatProvider),
+                            (TaskPriority)byte.Parse(task.Element(taskPriorityElement).Value, formatProvider),
+                            bool.Parse(task.Element(isAccomplishedElement).Value));
 
                 TasksModel tasks = new TasksModel();
                 foreach (SingleTaskModel task in data) tasks.AddTask(task);
