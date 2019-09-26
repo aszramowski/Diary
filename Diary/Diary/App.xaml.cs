@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Diary.Infrastructure.Dialog;
+using Diary.View;
+using Diary.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -12,5 +15,12 @@ namespace Diary
     /// </summary>
     public partial class App : Application
     {
+        internal static IDialogService dialogService;
+
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            dialogService = new DialogService(MainWindow);
+            dialogService.Register<YesNoDialogViewModel, YesNoDialogView>();
+        }
     }
 }

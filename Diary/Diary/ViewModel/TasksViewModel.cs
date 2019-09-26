@@ -89,8 +89,12 @@ namespace Diary.ViewModel
                     addTasksCommand = new RelayCommand(
                         o =>
                         {
-                            SingleTaskViewModel taskViewModel = o as SingleTaskViewModel;
-                            if (taskViewModel != null) TasksList.Add(taskViewModel);
+                            var result = App.dialogService.ShowDialog(new YesNoDialogViewModel("Adding task", $"Do you want to add a new task?"));
+                            if (result == true)
+                            {
+                                SingleTaskViewModel taskViewModel = o as SingleTaskViewModel;
+                                if (taskViewModel != null) TasksList.Add(taskViewModel);
+                            }
                         },
                         o =>
                         {
@@ -107,9 +111,13 @@ namespace Diary.ViewModel
                     removeTasksCommand = new RelayCommand(
                         o =>
                         {
-                            int taksIndex = (int)o;
-                            SingleTaskViewModel taskViewModel = TasksList[taksIndex];
-                            TasksList.Remove(taskViewModel);
+                            var result = App.dialogService.ShowDialog(new YesNoDialogViewModel("Removing task", $"Do you want to remove this task?"));
+                            if (result == true)
+                            {
+                                int taksIndex = (int)o;
+                                SingleTaskViewModel taskViewModel = TasksList[taksIndex];
+                                TasksList.Remove(taskViewModel); 
+                            }
                         },
                         o =>
                         {
