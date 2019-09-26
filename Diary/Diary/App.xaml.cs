@@ -19,6 +19,7 @@ namespace Diary
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            // Creating the DialogService and registering existing DialogViewModels
             dialogService = new DialogService(MainWindow);
             dialogService.Register<YesNoDialogViewModel, YesNoDialogView>();
         }

@@ -9,20 +9,16 @@ namespace Diary.Infrastructure.Dialog
     public class DialogService : IDialogService
     {
         private readonly Window owner;
-
+        
+        // Constructor specify the owner window of the dialog
         public DialogService(Window owner)
-        {
+        { 
             this.owner = owner;
             Mappings = new Dictionary<Type, Type>();
         }
 
         public IDictionary<Type, Type> Mappings { get; }
 
-        /// <summary>
-        /// Mapping ViewModel with associated view in a dictionary
-        /// </summary>
-        /// <typeparam name="TViewModel"></typeparam>
-        /// <typeparam name="TView"></typeparam>
         public void Register<TViewModel, TView>()
             where TViewModel : IDialogRequestClose
             where TView : IDialog
@@ -35,12 +31,14 @@ namespace Diary.Infrastructure.Dialog
 
         public bool? ShowDialog<TViewModel>(TViewModel viewModel) where TViewModel : IDialogRequestClose
         {
+            // A caller will give us an instance of ViewModel and we will use the mappings to find the corresponding View that ViewModel is associated with
             Type viewType = Mappings[typeof(TViewModel)];
 
             IDialog dialog = (IDialog)Activator.CreateInstance(viewType);
 
             EventHandler<DialogCloseRequestedEventArgs> handler = null;
 
+            // Responding to the close event
             handler = (sender, e) =>
             {
                 viewModel.CloseRequested -= handler;
@@ -51,12 +49,11 @@ namespace Diary.Infrastructure.Dialog
                     dialog.Close();
             };
 
-            viewModel.CloseRequested += handler;  // If viewModel fires an event the handler will be fired
+            viewModel.CloseRequested += handler;
 
             dialog.DataContext = viewModel;
             dialog.Owner = owner;
-
-            //return dialog result from this method
+            
             return dialog.ShowDialog();
         }        
     }
